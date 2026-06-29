@@ -7,8 +7,11 @@ class Settings:
     PROJECT_NAME: str = "AI Digital Identity System"
     API_V1_STR: str = "/api/v1"
     
-    # OpenAI / Gemini API Key
+    # OpenAI API Key
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    
+    # Google Gemini API Key (Free Alternative)
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
     # LlamaCloud API Key for LlamaParse
     LLAMA_CLOUD_API_KEY: str = os.getenv("LLAMA_CLOUD_API_KEY", "")
@@ -44,6 +47,10 @@ class Settings:
     @property
     def is_openai_configured(self) -> bool:
         return bool(self.OPENAI_API_KEY)
+        
+    @property
+    def is_gemini_configured(self) -> bool:
+        return bool(self.GEMINI_API_KEY)
 
 settings = Settings()
 

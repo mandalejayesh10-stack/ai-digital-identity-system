@@ -1,5 +1,7 @@
 import logging
 import hashlib
+import urllib.request
+import json
 import numpy as np
 from typing import List, Dict, Any
 from qdrant_client import QdrantClient
@@ -11,7 +13,14 @@ logger = logging.getLogger(__name__)
 class VectorStoreService:
     def __init__(self):
         self.collection_name = "career_documents"
-        self.vector_size = 1536  # Default OpenAI embedding size
+        
+        # Determine vector size based on active API
+        if settings.is_openai_configured:
+            self.vector_size = 1536
+        elif settings.is_gemini_configured:
+            self.vector_size = 768
+        else:
+            self.vector_size = 768  # Default mock embedding size
         
         # Initialize Qdrant Client
         if settings.is_qdrant_configured:
@@ -32,7 +41,7 @@ class VectorStoreService:
             collections = self.client.get_collections().collections
             collection_names = [c.name for c in collections]
             if self.collection_name not in collection_names:
-                logger.info(f"Creating Qdrant collection: {self.collection_name}")
+                logger.info(f"Creating Qdrant collection: {self.collection_name} (Size: {self.vector_size})")
                 self.client.create_collection(
                     collection_name=self.collection_name,
                     vectors_config=VectorParams(
@@ -45,7 +54,7 @@ class VectorStoreService:
 
     def _get_embedding(self, text: str) -> List[float]:
         """
-        Generates embedding using OpenAI if configured,
+        Generates embedding using OpenAI or Gemini if configured,
         otherwise falls back to a deterministic hash-based mock embedding.
         """
         if settings.is_openai_configured:
@@ -58,10 +67,38 @@ class VectorStoreService:
                 )
                 return response.data[0].embedding
             except Exception as e:
-                logger.error(f"OpenAI embedding generation failed, falling back to mock: {e}")
+                logger.error(f"OpenAI embedding generation failed: {e}")
+                
+        if settings.is_gemini_configured:
+            try:
+                return self._get_gemini_embedding(text)
+            except Exception as e:
+                logger.error(f"Gemini embedding generation failed: {e}")
                 
         # Mock embedding: Generate a deterministic vector based on text hash
         return self._generate_mock_embedding(text)
+
+    def _get_gemini_embedding(self, text: str) -> List[float]:
+        """
+        Calls Google Gemini API for embeddings using urllib (dependency-free).
+        """
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key={settings.GEMINI_API_KEY}"
+        headers = {"Content-Type": "application/json"}
+        data = {
+            "model": "models/text-embedding-004",
+            "content": {"parts": [{"text": text}]}
+        }
+        
+        req = urllib.request.Request(
+            url, 
+            data=json.dumps(data).encode("utf-8"), 
+            headers=headers,
+            method="POST"
+        )
+        
+        with urllib.request.urlopen(req) as response:
+            res = json.loads(response.read().decode("utf-8"))
+            return res["embedding"]["values"]
 
     def _generate_mock_embedding(self, text: str) -> List[float]:
         """
