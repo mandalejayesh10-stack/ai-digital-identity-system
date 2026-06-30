@@ -3,31 +3,81 @@
 :root {
   --background: #080b11;
   --foreground: #f8fafc;
+  
+  /* Slate Custom Mapping */
+  --slate-950: #05070c;
+  --slate-900: #0c101b;
+  --slate-800: #151b2d;
+  --slate-700: #1e293b;
+  --slate-600: #334155;
+  --slate-500: #475569;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f8fafc;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(14, 19, 31, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  /* Slate Custom Mapping (Inverted for Light Mode) */
+  --slate-950: #ffffff;
+  --slate-900: #f1f5f9;
+  --slate-800: #e2e8f0;
+  --slate-700: #cbd5e1;
+  --slate-600: #94a3b8;
+  --slate-500: #64748b;
+  --slate-400: #475569;
+  --slate-300: #334155;
+  --slate-200: #1e293b;
+  --slate-100: #0f172a;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: #0e131f;
-  --color-card-border: rgba(255, 255, 255, 0.05);
+  --color-card: var(--slate-900);
+  --color-card-border: var(--slate-800);
+  
+  --color-slate-950: var(--slate-950);
+  --color-slate-900: var(--slate-900);
+  --color-slate-800: var(--slate-800);
+  --color-slate-700: var(--slate-700);
+  --color-slate-600: var(--slate-600);
+  --color-slate-500: var(--slate-500);
+  --color-slate-400: var(--slate-400);
+  --color-slate-300: var(--slate-300);
+  --color-slate-200: var(--slate-200);
+  --color-slate-100: var(--slate-100);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Custom Premium Glassmorphism & Glow Effects */
 .glass-card {
-  background: rgba(14, 19, 31, 0.75);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
 }
 
 .glow-emerald {
@@ -53,16 +103,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #080b11;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: var(--slate-800);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--slate-700);
 }
 
 /* Keyframe Animations */

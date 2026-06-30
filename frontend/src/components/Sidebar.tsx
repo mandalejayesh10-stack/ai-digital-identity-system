@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -8,11 +9,30 @@ import {
   CalendarRange, 
   Network, 
   BotMessageSquare,
-  Cpu
+  Cpu,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    // Check local storage on mount
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.toggle('light', savedTheme === 'light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('light', newTheme === 'light');
+  };
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -23,7 +43,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-800 bg-[#0c101b]/90 backdrop-blur-md flex flex-col h-screen sticky top-0">
+    <aside className="w-64 border-r border-slate-800 bg-slate-900/95 backdrop-blur-md flex flex-col h-screen sticky top-0 transition-colors duration-300">
       {/* Brand Header */}
       <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800">
         <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400">
@@ -61,8 +81,21 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-800">
+      {/* Theme Toggle & Footer */}
+      <div className="p-4 border-t border-slate-800 flex flex-col gap-3">
+        {/* Theme Toggle Button */}
+        <button 
+          onClick={toggleTheme}
+          className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-medium bg-slate-800/50 hover:bg-slate-850 border border-slate-800/80 text-slate-400 hover:text-slate-200 transition-all duration-200 cursor-pointer"
+        >
+          <span className="flex items-center gap-2">
+            {theme === 'dark' ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
+            Theme: {theme === 'dark' ? 'Dark' : 'Light'}
+          </span>
+          <span className="text-[10px] text-emerald-400 font-mono">Toggle</span>
+        </button>
+
+        {/* System Status */}
         <div className="p-3 bg-slate-900/50 rounded-xl border border-slate-800/80">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>

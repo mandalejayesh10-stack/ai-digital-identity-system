@@ -25,12 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-[#080b11] text-slate-100 min-h-full flex antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} bg-background text-slate-100 min-h-full flex antialiased`}>
         {/* Navigation Sidebar */}
         <Sidebar />
 
         {/* Main Workspace Area */}
-        <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-gradient-to-b from-[#0a0f1d] via-[#080b11] to-[#080b11]">
+        <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-gradient-to-b from-slate-950 via-background to-background">
           {children}
         </main>
       </body>
