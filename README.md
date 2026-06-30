@@ -2,6 +2,8 @@
 
 > **The Ultimate GraphRAG-Powered Career Twin.**  
 > *Turn raw resumes, certificates, and portfolio URLs into an interactive, semantic digital identity. No more searching through folders—just ask your AI.*
+>
+> **🌐 Live Demo:** [ai-digital-identity-system.vercel.app](https://ai-digital-identity-system.vercel.app/)
 
 ---
 
